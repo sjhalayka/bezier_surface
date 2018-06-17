@@ -28,6 +28,8 @@ vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > 
 	cpp_dec_float_100 ret_y;
 	cpp_dec_float_100 ret_z;
 
+	cpp_dec_float_100 u_long = u;
+	cpp_dec_float_100 v_long = v;
 
 	const size_t Ni = num_wide - 1;
 	const size_t Nj = num_tall - 1;
@@ -36,8 +38,8 @@ vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > 
 	{
 		for (size_t j = 0; j <= Nj; j++)
 		{
-			cpp_dec_float_100 binpow_u = binomial(Ni, i) * pow(u, i) * pow(1 - u, Ni - i);
-			cpp_dec_float_100 binpow_v = binomial(Nj, j) * pow(v, j) * pow(1 - v, Nj - j);
+			cpp_dec_float_100 binpow_u = binomial(Ni, i) * pow(u_long, i) * pow(1 - u_long, Ni - i);
+			cpp_dec_float_100 binpow_v = binomial(Nj, j) * pow(v_long, j) * pow(1 - v_long, Nj - j);
 
 			ret_x += binpow_u * binpow_v * control_points[i][j][0];
 			ret_y += binpow_u * binpow_v * control_points[i][j][1];
