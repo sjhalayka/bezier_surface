@@ -9,7 +9,6 @@ vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > 
 
 	for (size_t i = 0; i <= Ni; i++)
 	{
-		  
 		for (size_t j = 0; j <= Nj; j++)
 		{
 			double binpow_u = binomial(Ni, i) * pow(u, i) * pow(1 - u, Ni - i);
