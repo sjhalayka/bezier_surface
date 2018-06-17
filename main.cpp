@@ -1,6 +1,6 @@
 #include "main.h"
 
-vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > &cpoints, size_t num_wide, size_t num_tall)
+vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > &control_points, size_t num_wide, size_t num_tall)
 {
 	vertex_3 ret;
 
@@ -9,14 +9,15 @@ vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > 
 
 	for (size_t i = 0; i <= Ni; i++)
 	{
+		  
 		for (size_t j = 0; j <= Nj; j++)
 		{
 			double binpow_u = binomial(Ni, i) * pow(u, i) * pow(1 - u, Ni - i);
 			double binpow_v = binomial(Nj, j) * pow(v, j) * pow(1 - v, Nj - j);
 
-			ret.x += cpoints[i][j][0] * binpow_u * binpow_v;
-			ret.y += cpoints[i][j][1] * binpow_u * binpow_v;
-			ret.z += cpoints[i][j][2] * binpow_u * binpow_v;
+			ret.x += control_points[i][j][0] * binpow_u * binpow_v;
+			ret.y += control_points[i][j][1] * binpow_u * binpow_v;
+			ret.z += control_points[i][j][2] * binpow_u * binpow_v;
 		}
 	}
 
@@ -39,29 +40,29 @@ int main(int argc, char **argv)
 	num_tall = frame.rows;
 	num_dims = 3; // xyz
 
-	cpoints.resize(num_wide);
+	control_points.resize(num_wide);
 
 	for (size_t i = 0; i < num_wide; i++)
 	{
-		cpoints[i].resize(num_tall);
+		control_points[i].resize(num_tall);
 
 		for (size_t j = 0; j < num_tall; j++)
-			cpoints[i][j].resize(num_dims);
+			control_points[i][j].resize(num_dims);
 	}
 
 	for (int j = 0; j < num_tall; j++)
 	{
 		for (int i = 0; i < num_wide; i++)
 		{
-			cpoints[i][j][0] = double(i) / double(num_tall);
-			cpoints[i][j][1] = double(j) / double(num_tall);
-			cpoints[i][j][2] = double(frame.at<unsigned char>(j, i)) / 255.0;
+			control_points[i][j][0] = double(i) / double(num_tall);
+			control_points[i][j][1] = double(j) / double(num_tall);
+			control_points[i][j][2] = double(frame.at<unsigned char>(j, i)) / 255.0;
 		}
 	}
 
 	cout << "Tesselating surface" << endl;
 
-	double spacer = 0.1;
+	double spacer = 0.01;
 
 	for (double u = 0; u < 1 - 0.001; u += spacer)
 	{
@@ -69,10 +70,10 @@ int main(int argc, char **argv)
 		{
 			cout << u << " " << v << endl;
 
-			vertex_3 v0 = bezier(u, v, cpoints, num_wide, num_tall);
-			vertex_3 v1 = bezier(u + spacer, v, cpoints, num_wide, num_tall);
-			vertex_3 v2 = bezier(u + spacer, v + spacer, cpoints, num_wide, num_tall);
-			vertex_3 v3 = bezier(u, v + spacer, cpoints, num_wide, num_tall);
+			vertex_3 v0 = bezier(u, v, control_points, num_wide, num_tall);
+			vertex_3 v1 = bezier(u + spacer, v, control_points, num_wide, num_tall);
+			vertex_3 v2 = bezier(u + spacer, v + spacer, control_points, num_wide, num_tall);
+			vertex_3 v3 = bezier(u, v + spacer, control_points, num_wide, num_tall);
 
 			float intensity0 = v0.z;
 			float intensity1 = v1.z;

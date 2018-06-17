@@ -44,7 +44,7 @@ int num_wide = 0;
 int num_tall = 0;
 int num_dims = 0; // xyz
 
-vector<vector<vector<float> > > cpoints;
+vector<vector<vector<float> > > control_points;
 
 
 GLUquadricObj* glu_obj = gluNewQuadric();
@@ -154,6 +154,30 @@ void render_string(int x, const int y, void *font, const string &text)
 
 void draw_objects(void)
 {
+	glDisable(GL_LIGHTING);
+
+	glBegin(GL_LINES);
+
+	glColor3f(1, 0, 0);
+	glVertex3f(0, 0, 0);
+	glVertex3f(1, 0, 0);
+	glColor3f(0, 1, 0);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 1, 0);
+	glColor3f(0, 0, 1);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 0, 1);
+
+	glColor3f(0.5, 0.5, 0.5);
+	glVertex3f(0, 0, 0);
+	glVertex3f(-1, 0, 0);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, -1, 0);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 0, -1);
+
+	glEnd();
+
 	glEnable(GL_LIGHTING);
 
 	GLfloat ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
@@ -203,31 +227,31 @@ void draw_objects(void)
 
 	glEnd();
 
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
-	for (size_t i = 0; i < triangles.size(); i++)
-	{
-		glBegin(GL_LINE_STRIP);
+	//for (size_t i = 0; i < triangles.size(); i++)
+	//{
+	//	glBegin(GL_LINE_STRIP);
 
-		glNormal3f(face_normals[i].x, face_normals[i].y, face_normals[i].z);
+	//	glNormal3f(face_normals[i].x, face_normals[i].y, face_normals[i].z);
 
-		float v0_colour[] = { 0, 0, 0, 1.0f };
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, v0_colour);
+	//	float v0_colour[] = { 0, 0, 0, 1.0f };
+	//	glMaterialfv(GL_FRONT, GL_DIFFUSE, v0_colour);
 
-		glVertex3f(triangles[i].vertex[0].x, triangles[i].vertex[0].y, triangles[i].vertex[0].z);
+	//	glVertex3f(triangles[i].vertex[0].x, triangles[i].vertex[0].y, triangles[i].vertex[0].z);
 
-		//float v1_colour[] = { triangles[i].colour[1].x, triangles[i].colour[1].y, triangles[i].colour[1].z, 1.0f };
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, v0_colour);
+	//	//float v1_colour[] = { triangles[i].colour[1].x, triangles[i].colour[1].y, triangles[i].colour[1].z, 1.0f };
+	//	glMaterialfv(GL_FRONT, GL_DIFFUSE, v0_colour);
 
-		glVertex3f(triangles[i].vertex[1].x, triangles[i].vertex[1].y, triangles[i].vertex[1].z);
+	//	glVertex3f(triangles[i].vertex[1].x, triangles[i].vertex[1].y, triangles[i].vertex[1].z);
 
-		//float v2_colour[] = { triangles[i].colour[2].x, triangles[i].colour[2].y, triangles[i].colour[2].z, 1.0f };
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, v0_colour);
+	//	//float v2_colour[] = { triangles[i].colour[2].x, triangles[i].colour[2].y, triangles[i].colour[2].z, 1.0f };
+	//	glMaterialfv(GL_FRONT, GL_DIFFUSE, v0_colour);
 
-		glVertex3f(triangles[i].vertex[2].x, triangles[i].vertex[2].y, triangles[i].vertex[2].z);
+	//	glVertex3f(triangles[i].vertex[2].x, triangles[i].vertex[2].y, triangles[i].vertex[2].z);
 
-		glEnd();
-	}
+	//	glEnd();
+	//}
 
 
 	//glPointSize(4.0);
@@ -242,9 +266,9 @@ void draw_objects(void)
 	   // for (int i = 0; i < num_wide; i++)
 	   // {
 		  //  vertex_3 v;
-		  //  v.x = cpoints[i][j][0];
-		  //  v.y = cpoints[i][j][1];
-		  //  v.z = cpoints[i][j][2];
+		  //  v.x = control_points[i][j][0];
+		  //  v.y = control_points[i][j][1];
+		  //  v.z = control_points[i][j][2];
 
 		  //  glVertex3f(v.x, v.y, v.z);
 	   // }
@@ -253,29 +277,7 @@ void draw_objects(void)
 	//glEnd();
 
 
-	glDisable(GL_LIGHTING);
 
-	glBegin(GL_LINES);
-
-	glColor3f(1, 0, 0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(1, 0, 0);
-	glColor3f(0, 1, 0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, 1, 0);
-	glColor3f(0, 0, 1);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, 0, 1);
-
-	glColor3f(0.5, 0.5, 0.5);
-	glVertex3f(0, 0, 0);
-	glVertex3f(-1, 0, 0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, -1, 0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, 0, -1);
-
-	glEnd();
 
 	glPopMatrix();
 }
