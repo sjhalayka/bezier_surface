@@ -39,6 +39,24 @@ using std::map;
 #include <utility>
 using std::pair;
 
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <iostream>
+#include <sstream>
+using namespace std;
+using namespace boost::multiprecision;
+
+
+double mp_to_double(cpp_dec_float_100 &b)
+{
+	ostringstream oss;
+	oss << b;
+
+	double ret;
+	istringstream iss(oss.str());
+	iss >> ret;
+
+	return ret;
+}
 
 int num_wide = 0;
 int num_tall = 0;
@@ -451,25 +469,7 @@ void passive_motion_func(int x, int y)
 }
 
 
-long long unsigned int fact(long long unsigned int n)
-{
-	long long unsigned int ret = 1;
 
-	for (long long unsigned int k = n; k > 0; k--)
-		ret *= k;
-
-	return ret;
-}
-
-long double binomial(long long unsigned int n, long long unsigned int k)
-{
-
-	//     n!
-	// -----------
-	// k! (n - k)!
-
-	return static_cast<long double>(fact(n)) / static_cast<long double>(fact(k)*fact(n - k));
-}
 
 void get_vertices_and_normals_from_triangles(vector<triangle> &t, vector<vertex_3> &fn, vector<vertex_3> &v, vector<vertex_3> &vn)
 {

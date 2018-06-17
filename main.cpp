@@ -1,8 +1,33 @@
 #include "main.h"
 
+cpp_dec_float_100 fact(cpp_dec_float_100 n)
+{
+	cpp_dec_float_100 ret = 1;
+
+	for (cpp_dec_float_100 k = n; k > 0; k--)
+		ret *= k;
+
+	return ret;
+}
+
+cpp_dec_float_100 binomial(cpp_dec_float_100 n, cpp_dec_float_100 k)
+{
+
+	//     n!
+	// -----------
+	// k! (n - k)!
+
+	return fact(n) / (fact(k)*fact(n - k));
+}
+
 vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > &control_points, size_t num_wide, size_t num_tall)
 {
 	vertex_3 ret;
+
+	cpp_dec_float_100 ret_x;
+	cpp_dec_float_100 ret_y;
+	cpp_dec_float_100 ret_z;
+
 
 	const size_t Ni = num_wide - 1;
 	const size_t Nj = num_tall - 1;
@@ -11,21 +36,25 @@ vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > 
 	{
 		for (size_t j = 0; j <= Nj; j++)
 		{
-			double binpow_u = binomial(Ni, i) * pow(u, i) * pow(1 - u, Ni - i);
-			double binpow_v = binomial(Nj, j) * pow(v, j) * pow(1 - v, Nj - j);
+			cpp_dec_float_100 binpow_u = binomial(Ni, i) * pow(u, i) * pow(1 - u, Ni - i);
+			cpp_dec_float_100 binpow_v = binomial(Nj, j) * pow(v, j) * pow(1 - v, Nj - j);
 
-			ret.x += control_points[i][j][0] * binpow_u * binpow_v;
-			ret.y += control_points[i][j][1] * binpow_u * binpow_v;
-			ret.z += control_points[i][j][2] * binpow_u * binpow_v;
+			ret_x += binpow_u * binpow_v * control_points[i][j][0];
+			ret_y += binpow_u * binpow_v * control_points[i][j][1];
+			ret_z += binpow_u * binpow_v * control_points[i][j][2];
 		}
 	}
+
+	ret.x = mp_to_double(ret_x);
+	ret.y = mp_to_double(ret_y);
+	ret.z = mp_to_double(ret_z);
 
 	return ret;
 }
 
 int main(int argc, char **argv)
 {
-	Mat frame = imread("picture.png", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat frame = imread("picture.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
 	if (frame.empty())
 	{
@@ -61,7 +90,7 @@ int main(int argc, char **argv)
 
 	cout << "Tesselating surface" << endl;
 
-	double spacer = 0.01;
+	double spacer = 0.1;
 
 	for (double u = 0; u < 1 - 0.001; u += spacer)
 	{
