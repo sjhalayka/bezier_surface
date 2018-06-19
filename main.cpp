@@ -19,13 +19,26 @@ cpp_dec_float_100 fact(cpp_dec_float_100 n)
 	return ret;
 }
 
+map<pair<cpp_dec_float_100, cpp_dec_float_100>, cpp_dec_float_100> binomial_cache;
+
 cpp_dec_float_100 binomial(cpp_dec_float_100 n, cpp_dec_float_100 k)
 {
+	pair<cpp_dec_float_100, cpp_dec_float_100> p(n, k);
+
+	map<pair<cpp_dec_float_100, cpp_dec_float_100>, cpp_dec_float_100>::const_iterator ci = binomial_cache.find(p);
+
+	if (ci != binomial_cache.end())
+		return ci->second;
+
 	//     n!
 	// -----------
 	// k! (n - k)!
 
-	return fact(n) / (fact(k)*fact(n - k));
+	cpp_dec_float_100 ret = fact(n) / (fact(k)*fact(n - k));
+
+	binomial_cache[p] = ret;
+
+	return ret;
 }
 
 vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > &control_points, size_t num_wide, size_t num_tall)
