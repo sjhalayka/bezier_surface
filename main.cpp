@@ -41,6 +41,25 @@ cpp_dec_float_100 binomial(cpp_dec_float_100 n, cpp_dec_float_100 k)
 	return ret;
 }
 
+map<pair<cpp_dec_float_100, cpp_dec_float_100>, cpp_dec_float_100> pow_cache;
+
+cpp_dec_float_100 cached_pow(cpp_dec_float_100 &base, cpp_dec_float_100 &exponent)
+{
+	pair<cpp_dec_float_100, cpp_dec_float_100> p(base, exponent);
+
+	map<pair<cpp_dec_float_100, cpp_dec_float_100>, cpp_dec_float_100>::const_iterator ci = pow_cache.find(p);
+
+	if (ci != pow_cache.end())
+		return ci->second;
+
+	cpp_dec_float_100 ret = pow(base, exponent);
+
+	pow_cache[p] = ret;
+
+	return ret;
+}
+
+
 vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > &control_points, size_t num_wide, size_t num_tall)
 {
 	vertex_3 ret;
@@ -59,8 +78,8 @@ vertex_3 bezier(const double u, const double v, vector<vector<vector<float> > > 
 	{
 		for (size_t j = 0; j <= Nj; j++)
 		{
-			cpp_dec_float_100 binpow_u = binomial(Ni, i) * pow(u_long, i) * pow(1 - u_long, Ni - i);
-			cpp_dec_float_100 binpow_v = binomial(Nj, j) * pow(v_long, j) * pow(1 - v_long, Nj - j);
+			cpp_dec_float_100 binpow_u = binomial(Ni, i) * cached_pow(u_long, cpp_dec_float_100(i)) * cached_pow(cpp_dec_float_100(1 - u_long), cpp_dec_float_100(Ni - i));
+			cpp_dec_float_100 binpow_v = binomial(Nj, j) * cached_pow(v_long, cpp_dec_float_100(j)) * cached_pow(cpp_dec_float_100(1 - v_long), cpp_dec_float_100(Nj - j));
 
 			ret_x += binpow_u * binpow_v * control_points[i][j][0];
 			ret_y += binpow_u * binpow_v * control_points[i][j][1];
