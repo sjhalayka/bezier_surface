@@ -1,18 +1,26 @@
 #include "main.h"
 
+map<cpp_dec_float_100, cpp_dec_float_100> fact_cache;
+
 cpp_dec_float_100 fact(cpp_dec_float_100 n)
 {
+	map<cpp_dec_float_100, cpp_dec_float_100>::const_iterator ci = fact_cache.find(n);
+
+	if (ci != fact_cache.end())
+		return ci->second;
+
 	cpp_dec_float_100 ret = 1;
 
 	for (cpp_dec_float_100 k = n; k > 0; k--)
 		ret *= k;
+
+	fact_cache[n] = ret;
 
 	return ret;
 }
 
 cpp_dec_float_100 binomial(cpp_dec_float_100 n, cpp_dec_float_100 k)
 {
-
 	//     n!
 	// -----------
 	// k! (n - k)!
